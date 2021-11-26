@@ -1,0 +1,17 @@
+---
+- name: Create EC2 instances
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  # BLock is a group of Tasks combined together.
+  - name: Get Info Block
+    block: 
+      - name: Get runnning instance info
+
+        ec2_instance_info:
+        register: ec2info
+
+      - name: Print info
+        debug: var="ec2info.instances"
+  tags: ['always','getinfoonly']

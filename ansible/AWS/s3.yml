@@ -1,0 +1,10 @@
+- name: s3 Test
+  hosts: localhost
+  #connection: local
+
+  tasks:
+    - name: createing a new s3 bucket
+      aws_s3:
+        bucket: dharmiltestingbucket2021
+        mode: create
+        region: us-east-2

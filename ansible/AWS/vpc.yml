@@ -1,0 +1,35 @@
+---
+- name: Createing Subnet and getting Subnet ID in return
+  hosts: localhost
+
+  vars: 
+    region: us-east-1
+
+  tasks: 
+
+    - name: Create VPC
+      amazon.aws.ec2_vpc_net:
+        name: Demo
+        cidr_block: 10.10.0.0/16
+        region: "{{ region }}"
+        dns_hostnames: yes
+        dns_support: yes
+        ipv6_cidr: no
+      #register: vpc
+      register: id
+    
+    - name: Create Subnet
+      amazon.aws.ec2_vpc_subnet:
+        tags: 
+          name: Demo
+        az: us-east-1b
+        region: "{{ region }}"
+        cidr: 10.10.10.0/24
+        map_public: yes
+        vpc_id: "{{ id.vpc.id }}"
+      register: sun
+
+    - debug:
+        #var: vpc
+        var: id.vpc.id
+        var: sun

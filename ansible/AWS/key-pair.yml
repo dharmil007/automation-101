@@ -1,0 +1,14 @@
+---
+- name: Create ec2-keyPair
+  hosts: localhost
+  gather_facts: false
+
+  tasks: 
+    - name: Creating Ec2 Key Pair
+      amazon.aws.ec2_key:
+          name: new_Pair2
+          region: us-east-1
+      register: key
+    
+    - debug:
+        var: key
