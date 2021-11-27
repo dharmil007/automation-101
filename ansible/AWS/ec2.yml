@@ -29,8 +29,6 @@
           Name: Demo
         instance_tags:
           Name: webserver
-          Uses: dharmil-website
-          Uses: jd-Grp
         vpc_subnet_id: "{{ subnet_id }}"
         assign_public_ip: yes
         volumes:

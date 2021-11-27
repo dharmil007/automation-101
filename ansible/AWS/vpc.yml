@@ -23,7 +23,7 @@
     - name: Create Subnet
       amazon.aws.ec2_vpc_subnet:
         tags: 
-          name: webserver
+          Name: webserver
         az: us-east-1b
         region: "{{ region }}"
         cidr: 10.10.10.0/24
@@ -38,7 +38,7 @@
         region: "{{ region }}"
         state: present
         tags: 
-          - name: Webserver IGW
+          Name: Webserver IGW
       register: igw
 
     #Create route tables
