@@ -3,16 +3,19 @@
   hosts: localhost
   gather_facts: true
 
+  vars:
+    name: dharmil-website202111
+
   tasks: 
     - name: Creating Ec2 Key Pair
       amazon.aws.ec2_key:
-          name: dharmil-website202111
+          name: "{{ name }}"
           region: us-east-1
       register: key
     
     - name: Write Key to file
       copy:
         content: "{{ key.key.private_key }}"
-        dest: .key.pem
+        dest: {{ name }}.pem
     - debug:
         var: key.key.private_key
