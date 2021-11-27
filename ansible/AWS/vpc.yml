@@ -6,30 +6,35 @@
     region: us-east-1
 
   tasks: 
-
+    #Creation of VPC
     - name: Create VPC
       amazon.aws.ec2_vpc_net:
-        name: Demo
+        name: Website_Projects
         cidr_block: 10.10.0.0/16
         region: "{{ region }}"
         dns_hostnames: yes
         dns_support: yes
         ipv6_cidr: no
       #register: vpc
-      register: id
-    
+      register: vpc_id
+
+
+    #Creation of Subnet
     - name: Create Subnet
       amazon.aws.ec2_vpc_subnet:
         tags: 
-          name: Demo
+          name: webserver
         az: us-east-1b
         region: "{{ region }}"
         cidr: 10.10.10.0/24
         map_public: yes
-        vpc_id: "{{ id.vpc.id }}"
-      register: sun
+        vpc_id: "{{ vpc_id.vpc.id }}"
+      register: subnet
+    
+
 
     - debug:
         #var: vpc
-        var: id.vpc.id
-        var: sun
+        var: vpc_id.vpc.id
+        var: subnet
+      

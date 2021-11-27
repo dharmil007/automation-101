@@ -1,0 +1,14 @@
+#./mainAWS.yml
+
+---
+#Creation of VPC and Subnet:
+ - import_playbook: vpc.yml
+
+#Creation of securityGroup: 
+ - import_playbook: groups.yml
+
+#Creation of Key-Pair
+ - import_playbook: key-pair.yml
+
+#Creation of ec2:
+ - import_playbook: ec2.yml

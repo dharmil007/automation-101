@@ -1,5 +1,5 @@
 ---
-- name: Creating a new Demo EC2 instance.
+- name: Creating a new EC2 instance.
   hosts: localhost
   gather_facts: false
 
@@ -8,26 +8,18 @@
 
     #ec2:
     region: us-east-1
-    instance_type: t3.micro
+    instance_type: t2.micro
     ami: ami-083654bd07b5da81d
-    keypair: aws_webserver_202111
-    subnet_id: subnet-0e8d9845d
+    keypair: dharmil-website202111
+    subnet_id: "{{ subnet.subnet.id }}"
+    group: "{{ grp.group_id }}"
 
   tasks: 
-
-    - name: Create a new VPC
-      amazon.aws.ec2_vpc_net:
-        name: Test-Website-Demo
-        cidr_block: 10.10.0.0/16
-        region: "{{ region }}"
-
-
-    - name: Create ec2 key Pair  
 
     - name: Create an ec2 instance
       ec2: 
         key_name: "{{ keypair }}"
-        group: webserver_group #Group name
+        group_id: "{{ group }}" #Group ID
         instance_type: "{{ instance_type }}"
         image: "{{ ami }}"
         wait: true
@@ -36,8 +28,18 @@
         count_tag:
           Name: Demo
         instance_tags:
-          Name: Demo
+          Name: webserver
+          Uses: dharmil-website
+          Uses: jd-Grp
         vpc_subnet_id: "{{ subnet_id }}"
         assign_public_ip: yes
+        volumes:
+          - device_name: /dev/sda1
+            volume_size: 30
+            volume_type: gp3
       register: ec2
+
+    - debug: 
+        var: ec2
+        var: ec2.instance.public_ip #publicIP
     

@@ -1,0 +1,38 @@
+---
+- name: Create ec2 Security Group
+  hosts: localhost
+  gather_facts: no
+
+  tasks: 
+    - name: Create Ec2 group for linux webserver
+      amazon.aws.ec2_group:
+        name: Linux Webserver
+        region: us-east-1
+        state: present
+        description: SG for Linux Webserver
+        vpc_id: "{{ vpc_id.vpc.id }}"
+        rules:
+          - cidr_ip: 0.0.0.0/0
+            proto: tcp
+            ports: 
+              - 80
+            rule_desc: allow All on port 80 (http)
+          - cidr_ip: 0.0.0.0/0
+            proto: tcp
+            ports: 
+              - 443
+            rule_desc: allow All on port 443 (https)
+          - cidr_ip: 0.0.0.0/0
+            proto: tcp
+            ports: 
+              - 22
+            rule_desc: allow ALl on prot 22 (ssh)
+          - cidr_ip: 0.0.0.0/0
+            proto: icmp
+            ports:
+              - -1
+            rule_desc: allow All for ping Packets
+      register: grp
+
+    - debug: 
+        var: grp
