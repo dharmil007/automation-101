@@ -31,10 +31,29 @@
         vpc_id: "{{ vpc_id.vpc.id }}"
       register: subnet
     
+    #Creating Internet Gateway
+    - name: Create IGW
+      ec2_vpc_igw:
+        vpc_id: "{{ vpc_id.vpc.id }}"
+        region: "{{ region }}"
+        state: present
+        tags: 
+          - name: Webserver IGW
+      register: igw
+
+    #Create route tables
+    - name: Create route table
+      ec2_vpc_route_table:
+        vpc_id: "{{ vpc_id.vpc.id }}"
+        region: "{{ region }}"
+        subnets: "{{ subnet.subnet.id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
 
 
     - debug:
         #var: vpc
         var: vpc_id.vpc.id
         var: subnet
-      
+        var: igw
