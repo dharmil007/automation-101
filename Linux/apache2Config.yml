@@ -1,0 +1,68 @@
+---
+
+#Configuration of Apache2
+#Seperate file for each domain.
+- name: Configuration for "{{ http_host }}"
+  hosts: webservers
+  become: true
+  vars_files:
+    - vars/webservers.yml
+  
+  tasks: 
+    #Create app group.
+    - name: Create app group
+      ansible.builtin.group:
+        name: "{{ app_group }}"
+        state: present
+        system: yes
+
+
+    #Create app user. This usre will be a system user
+    #Create a conditionn to check if it exists or not.
+    - name: Create app user
+      ansible.builtin.user: 
+        name: "{{ app_user }}"
+        system: yes
+        create_home: no
+        password: 
+        groups: 
+          - "{{ app_group }}"
+          - sudo
+        state: present
+
+    #Create Document root.
+    #Create a conditionn to check if it exists or not.
+    - name: Create document root.
+      ansible.builtin.file:
+        path: "/var/www/{{ http_host }}"
+        state: directory
+        owner: "{{ app_user }}"
+        mode: "0755"
+
+    #Copy conf file to conf directory
+    - name: Configure the http Configuration
+      ansible.builtin.template:
+        src: "files/apache.conf.j3"
+        dest: "/etc/apache2/sites-available/{{ http_conf }}"
+      notify: Reload Apache
+      
+    #Enable the new site
+    - name: Enable the new site "{{ http_host }}"
+      shell: /usr/sbin/a2ensite {{ http_conf }}
+      notify: Reload Apache
+    
+    #Disable Default site
+    - name: Disable default site
+      shell: /usr/sbin/a2dissite 000-default.conf
+      notify: Reload Apache
+
+  #Handlers:
+  handlers:
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+        
+    
+
+

@@ -1,0 +1,33 @@
+---
+#Configuring git
+
+- name: Configuring and Downloading file from github
+  become: true
+  hosts: webservers
+  vars_files:
+    - var/webserver.yml
+
+  tasks: 
+    #Install git
+    - name: Install git
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'git' ]
+    
+    #Download file from Github
+    - name: Get files from github
+      ansible.uiltin.git:
+        dest: "/var/www/{{ http_host }}"
+        repo: https://github.com/dharmil007/dharmil.ME
+      notify: Reload Apache
+
+    #Configure Git using jinjs
+        
+
+
+  #Reload Apache
+  handler:
+    - name: Reload Apache
+      service: 
+        - name: apache2
+          state: reloaded
+

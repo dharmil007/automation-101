@@ -1,0 +1,9 @@
+---
+http_host: "dharmilsanghvi.com"
+http_conf: "dharmilsanghvi.conf"
+http_port: "80"
+https_port: "443"
+server_admin: ds@dharmilsanghvi.com
+app_user: "test1"
+app_group: "test1"
+disable_default: true

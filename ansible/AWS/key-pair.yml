@@ -4,7 +4,7 @@
   gather_facts: true
 
   vars:
-    name: dharmil-website202111
+    name: dharmil-website202111.pem
 
   tasks: 
     - name: Creating Ec2 Key Pair
@@ -16,6 +16,6 @@
     - name: Write Key to file
       copy:
         content: "{{ key.key.private_key }}"
-        dest: {{ name }}.pem
+        dest: "{{ name }}"
     - debug:
         var: key.key.private_key
